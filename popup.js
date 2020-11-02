@@ -1,63 +1,73 @@
+var addbtn = null;
+var removebtn = null;
+var refeshbtn = null;
+
+
 document.addEventListener('DOMContentLoaded', function () {
+	chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+		chrome.tabs.sendMessage(tabs[0].id, { handling: "active" });
+	});
 
-	var addbtn = document.getElementById("al_btn_add");
-	var removebtn = document.getElementById("al_btn_remove");
+	// get the buttons
+	addbtn = document.getElementById("al_btn_add");
+	removebtn = document.getElementById("al_btn_remove");
+	refeshbtn = document.getElementById("al_btn_refresh");
 
+	// add functions
 	addbtn.addEventListener("click", function () {
 		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 			chrome.tabs.sendMessage(tabs[0].id, { handling: "add" });
+			removebtn.style.display = "";
+			addbtn.style.display = "none";
 		});
 	})
-
 	removebtn.addEventListener("click", function () {
 		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 			chrome.tabs.sendMessage(tabs[0].id, { handling: "remove" });
+			addbtn.style.display = "";
+			removebtn.style.display = "none";
 		});
 	})
+	refeshbtn.addEventListener("click", function () {
+		console.log("click");
+		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, { handling: "active" });
+		});
+		containsInList();
+	})
 
-	//chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-	//	chrome.tabs.sendMessage(tabs[0].id, { handling: "contains" }, function (res) {
-	//		CreateButton(res.response);
-	//	});
-	//});
+	// check if list contians
+	containsInList();
+});
 
-	//chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
-	//	chrome.tabs.sendMessage(tabs[0].id, { greeting: "hello" }, function (response) {
-	//		console.log(response);
-	//		//console.log(response.farewell);
-	//	});
-	//});
 
-	//function CreateButton(res) {
-	//	console.log(123);
-	//	var container = document.getElementById("al_btn_container");
-
-	//	var bttn = document.createElement("button");
-
-	//	// Remove
-	//	if (container && res.contains) {
-	//		bttn.onclick = function () {
-	//			// remove
-	//			//chrome.tabs.sendMessage(tabs[0].id, 'remove', SetButton);
-	//		}
-	//		bttn.style.backgroundColor = "red";
-	//		bttn.innerHTML = "Auto like youtuber"
-
-	//	// Add
-	//	} else if (container && !res.contains) {
-	//		bttn.onclick = function () {
-	//			// add to list
-	//			//chrome.tabs.sendMessage(tabs[0].id, 'add', SetButton);
-	//		}
-	//		bttn.style.backgroundColor = "green";
-	//		bttn.innerHTML = "Dont auto like youtuber"
-
-	//	}
-
-	//	document.body.appendChild(bttn);
-	//}
-
+function containsInList() {
 	chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
-		console.log(result.likeuservideos);
-	});
-}, false);
+		var likeusers = result;
+		console.log("Like users", likeusers.likeuservideos);
+
+		// get current user
+		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+			chrome.tabs.sendMessage(tabs[0].id, { handling: "active" });
+
+			chrome.storage.sync.get({ "currentuser": "" }, function (active) {
+				var containsuser = false;
+				for (var i = 0; i < likeusers.likeuservideos.length; i++) {
+					if (likeusers.likeuservideos[i] == active.currentuser) {
+						containsuser = true;
+					}
+				}
+
+				console.log(active.currentuser);
+
+				if (containsuser) {
+					addbtn.style.display = "none";
+					removebtn.innerHTML = "Stop auto like " + active.currentuser;
+				} else {
+					removebtn.style.display = "none";
+					addbtn.innerHTML = "Auto like " +  active.currentuser;
+				}
+			});
+		});
+	});	
+}

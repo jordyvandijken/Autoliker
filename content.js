@@ -51,8 +51,8 @@ chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
 // Listen to button calls
 chrome.runtime.onMessage.addListener(function (request, sender) {
     switch (request.handling) {
-        case "containsUser":
-            //sendResponse({ contains: ContainsUser() });
+        case "active":
+            ContainsUser();
             break;
         case "add":
             AddUser();
@@ -62,11 +62,6 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
             break;
         default:
     }
-});
-
-// tab change
-chrome.tabs.onActivated.addListener(function (activeInfo) {
-    console.log("123");
 });
 
 
@@ -100,9 +95,12 @@ chrome.tabs.onActivated.addListener(function (activeInfo) {
 //            sendResponse({ farewell: "goodbye" });
 //    });
 
-
 function ContainsUser() {
     var youtuber = document.getElementById("channel-name").firstElementChild.firstElementChild.firstElementChild.firstElementChild.innerHTML;
+
+    chrome.storage.sync.set({ "currentuser": youtuber }, function () {
+        console.log('Currentuser is set to ' + youtuber);
+    });
 
     return likeusers.likeuservideos.indexOf(youtuber) !== -1;
 }
@@ -117,6 +115,8 @@ function AddUser() {
             likeusers.likeuservideos.push(youtuber);
             SavaData();
             likevideo();
+
+            console.log("Added Users: ", likeusers.likeuservideos);
         }
     });
 }
@@ -130,13 +130,15 @@ function RemoveUser() {
         if (ContainsUser()) {
             likeusers.likeuservideos.remove(youtuber);
             SavaData();
+
+            console.log("Removed Users: ", likeusers.likeuservideos);
         }
     });
 }
 
 function SavaData() {
     chrome.storage.sync.set({ "likeuservideos": likeusers.likeuservideos }, function () {
-        console.log('Value is set to ' + value);
+        console.log('likeuservideos is set to ' + likeusers.likeuservideos);
     });
 }
 

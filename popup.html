@@ -88,25 +88,46 @@
 				position: relative;
 				top: 1px;
 			}
+
+		.btnrefresh {
+			box-shadow: 0px 1px 0px 0px #1c1b18;
+			background-color: #b5b5b5;
+			border-radius: 15px;
+			border: 2px solid #333029;
+			display: inline-block;
+			cursor: pointer;
+			color: #505739;
+			font-family: Arial;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 12px 16px;
+			text-decoration: none;
+			height: auto;
+			margin-left: 10px;
+		}
+
+			.btnrefresh:hover {
+				background-color: #ccc2a6;
+			}
+
+			.btnrefresh:active {
+				position: relative;
+				top: 1px;
+			}
     </style>
 
   </head>
   <body>
-	  <div class="headerline">
-	  	<h1>Auto supporter</h1>
-	  </div>
+  	<div class="headerline">
+  		<h1>Auto supporter</h1>
+  	</div>
 
-	  <div id="al_btn_container">
-		  <button id="al_btn_add" class="startlike">Auto like youtuber</button>
-		  <button id="al_btn_remove" class="stoplike">Stop auto like youtuber</button>
-	  </div>
+	<div id="al_btn_container">
+		<button id="al_btn_add" class="startlike">Auto like </button>
+		<button id="al_btn_remove" class="stoplike">Stop auto like </button>
+		<button id="al_btn_refresh" class="btnrefresh">Refresh</button>
+	</div>
 
-	  <script src="popup.js">
-		  document.addEventListener('DOMContentLoaded', function () {
-			  chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
-				  console.log("Like users", likeusers.likeuservideos);
-			  });
-		  }
-	  </script>
+  	<script src="popup.js"></script>
   </body>
 </html>
