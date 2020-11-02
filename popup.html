@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <style>
+		body {
+			background-color: #3a3a3a;
+			margin: 0;
+			width: 260px;
+		}
+
+		button {
+			height: 30px;
+			width: 240px;
+			outline: none;
+			margin: 6px;
+			background-color: gray;
+		}
+
+		h1 {
+			font-size: 150%;
+			text-align: center;
+			color: white;
+			margin-top: 0px;
+		}
+
+		a {
+			color: white;
+		}
+
+		#al_btn_container {
+			padding: 5px 0px;
+		}
+
+		.headerline {
+			height: 48px;
+			padding-top: 24px;
+			background-color: #1b1b1b;
+		}
+
+		.stoplike {
+			box-shadow: 0px 1px 0px 0px #1c1b18;
+			background-color: #cc9494;
+			border-radius: 15px;
+			border: 2px solid #333029;
+			display: inline-block;
+			cursor: pointer;
+			color: #505739;
+			font-family: Arial;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 12px 16px;
+			text-decoration: none;
+			height: auto;
+			margin-left: 10px;
+		}
+
+			.stoplike:hover {
+				background-color: #ccc2a6;
+			}
+
+			.stoplike:active {
+				position: relative;
+				top: 1px;
+			}
+
+		.startlike {
+			box-shadow: 0px 1px 0px 0px #1c1b18;
+			background-color: #adcca6;
+			border-radius: 15px;
+			border: 2px solid #333029;
+			display: inline-block;
+			cursor: pointer;
+			color: #505739;
+			font-family: Arial;
+			font-size: 14px;
+			font-weight: bold;
+			padding: 12px 16px;
+			text-decoration: none;
+			height: auto;
+			margin-left: 10px;
+		}
+
+			.startlike:hover {
+				background-color: #ccc2a6;
+			}
+
+			.startlike:active {
+				position: relative;
+				top: 1px;
+			}
+    </style>
+
+  </head>
+  <body>
+	  <div class="headerline">
+	  	<h1>Auto supporter</h1>
+	  </div>
+
+	  <div id="al_btn_container">
+		  <button id="al_btn_add" class="startlike">Auto like youtuber</button>
+		  <button id="al_btn_remove" class="stoplike">Stop auto like youtuber</button>
+	  </div>
+
+	  <script src="popup.js">
+		  document.addEventListener('DOMContentLoaded', function () {
+			  chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
+				  console.log("Like users", likeusers.likeuservideos);
+			  });
+		  }
+	  </script>
+  </body>
+</html>
