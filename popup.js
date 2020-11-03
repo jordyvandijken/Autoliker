@@ -29,22 +29,27 @@ document.addEventListener('DOMContentLoaded', function () {
 		});
 	})
 	refeshbtn.addEventListener("click", function () {
-		console.log("click");
+		//console.log("click");
 		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
 			chrome.tabs.sendMessage(tabs[0].id, { handling: "active" });
 		});
-		containsInList();
+		addbtn.style.display = "none";
+		removebtn.style.display = "none";
+
+
+		setTimeout(function () {
+			containsInList();
+		}, 100);
 	})
 
 	// check if list contians
 	containsInList();
 });
 
-
 function containsInList() {
 	chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
 		var likeusers = result;
-		console.log("Like users", likeusers.likeuservideos);
+		//console.log("Like users", likeusers.likeuservideos);
 
 		// get current user
 		chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
@@ -58,12 +63,14 @@ function containsInList() {
 					}
 				}
 
-				console.log(active.currentuser);
+				//console.log(active.currentuser);
 
 				if (containsuser) {
 					addbtn.style.display = "none";
+					removebtn.style.display = "";
 					removebtn.innerHTML = "Stop auto like " + active.currentuser;
 				} else {
+					addbtn.style.display = "";
 					removebtn.style.display = "none";
 					addbtn.innerHTML = "Auto like " +  active.currentuser;
 				}
@@ -71,3 +78,8 @@ function containsInList() {
 		});
 	});	
 }
+
+// get active
+chrome.tabs.query({ active: true, currentWindow: true }, function (tabs) {
+	chrome.tabs.sendMessage(tabs[0].id, { handling: "active" });
+});

@@ -1,7 +1,7 @@
 {
 	"name": "Autoliker",
 	"author": "Teenaapje",
-	"version": "1.20.10",
+	"version": "1.20.11",
 	"description": "Auto like your fav youtuber",
 	"permissions": [ "storage", "contextMenus", "tabs", "background" ],
 	"icons": {

@@ -27,13 +27,6 @@ function likevideo() {
 }
 
 
-
-//chrome.storage.sync.get(['likeuservideos'], function (result) {
-//    likeusers = result;
-	
-//    console.log("Like users", likeusers);
-//    likevideo();
-//});
 chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
     likeusers = result;
 	
@@ -41,16 +34,12 @@ chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
     likevideo();
 });
 
-//var likebttn = document.getElementsByTagName("yt-icon-button")[7];
-
-//console.log(likebttn);
-//if (likebttn.getAttribute("aria-label").includes("like this video along with")) {
-//    console.log(likebttn);
-//}
-
 // Listen to button calls
 chrome.runtime.onMessage.addListener(function (request, sender) {
     switch (request.handling) {
+        case "test":
+            //console.log("test recieved");
+            break;
         case "active":
             ContainsUser();
             break;
@@ -64,42 +53,11 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
     }
 });
 
-
-//chrome.runtime.onMessage.addListener( function (request, sender, sendResponse) {
-//    console.log(sender.tab ?
-//        "from a content script:" + sender.tab.url :
-//        "from the extension");
-
-//    sendResponse({ response: false });
-
-//    switch (request.handling) {
-//        case "containsUser":
-//            sendResponse({ response: ContainsUser() });
-//            break;
-//        case "add":
-//            //sendResponse({ contains: ContainsUser() });
-//            break;
-//        case "remove":
-//            //sendResponse({ contains: ContainsUser() });
-//            break;
-//        default:
-//    }
-//});
-
-//chrome.runtime.onMessage.addListener(
-//    function (request, sender, sendResponse) {
-//        console.log(sender.tab ?
-//            "from a content script:" + sender.tab.url :
-//            "from the extension");
-//        if (request.greeting == "hello")
-//            sendResponse({ farewell: "goodbye" });
-//    });
-
 function ContainsUser() {
     var youtuber = document.getElementById("channel-name").firstElementChild.firstElementChild.firstElementChild.firstElementChild.innerHTML;
 
     chrome.storage.sync.set({ "currentuser": youtuber }, function () {
-        console.log('Currentuser is set to ' + youtuber);
+        //console.log('Currentuser is set to ' + youtuber);
     });
 
     return likeusers.likeuservideos.indexOf(youtuber) !== -1;
@@ -116,7 +74,7 @@ function AddUser() {
             SavaData();
             likevideo();
 
-            console.log("Added Users: ", likeusers.likeuservideos);
+            //console.log("Added Users: ", likeusers.likeuservideos);
         }
     });
 }
@@ -131,14 +89,14 @@ function RemoveUser() {
             likeusers.likeuservideos.remove(youtuber);
             SavaData();
 
-            console.log("Removed Users: ", likeusers.likeuservideos);
+            //console.log("Removed Users: ", likeusers.likeuservideos);
         }
     });
 }
 
 function SavaData() {
     chrome.storage.sync.set({ "likeuservideos": likeusers.likeuservideos }, function () {
-        console.log('likeuservideos is set to ' + likeusers.likeuservideos);
+        //console.log('likeuservideos is set to ' + likeusers.likeuservideos);
     });
 }
 
