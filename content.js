@@ -23,14 +23,14 @@ function likevideo() {
         if (!buttonfound) {
             likevideo()
         }
-    }, 1000);
+    }, 180000);
 }
 
 
 chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
     likeusers = result;
 	
-    console.log("Like users", likeusers.likeuservideos);
+    //console.log("Like users", likeusers.likeuservideos);
     likevideo();
 });
 

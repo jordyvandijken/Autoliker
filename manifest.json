@@ -1,9 +1,9 @@
 {
-	"name": "Autoliker",
-	"author": "Teenaapje",
+	"name": "Autosupporter",
+	"author": "Jvandijken",
 	"version": "1.20.11",
 	"description": "Auto like your fav youtuber",
-	"permissions": [ "storage", "contextMenus", "tabs", "background" ],
+	"permissions": [ "storage" ],
 	"icons": {
 		"16": "icon16.png",
 		"48": "icon48.png",
@@ -11,7 +11,7 @@
 	},
 	"content_scripts": [
 		{
-			"matches": [ "<all_urls>" ],
+			"matches": [ "https://*.youtube.com/*" ],
 			"js": [ "content.js" ]
 		}
 	],
