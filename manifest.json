@@ -1,7 +1,7 @@
 {
 	"name": "Autosupporter",
 	"author": "Jvandijken",
-	"version": "1.20.11",
+	"version": "1.20.11.6",
 	"description": "Auto like your fav youtuber",
 	"permissions": [ "storage" ],
 	"icons": {

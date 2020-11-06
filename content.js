@@ -1,44 +1,55 @@
 var likeusers = [];
+var btn;
+var currentYoutuber;
 
-function likevideo() {
-    setTimeout(function () {
-        var ytbs = document.getElementsByTagName("yt-icon-button");
-
-        var buttonfound = false;
-
-        for (var i = 0; i < ytbs.length; i++) {
-            var bttnchild = ytbs[i].firstElementChild;
-            // find the right button
-            if (bttnchild.getAttribute("aria-label") && bttnchild.getAttribute("aria-label").startsWith("like this video along with")) {
-                // check if already liked
-                if (ContainsUser() && bttnchild.getAttribute("aria-pressed") === "false") {
-                    ytbs[i].click();
-                    //console.log(ytbs[i].click());
-                }
-
-                buttonfound = true;
-            }
-        }
-
-        if (!buttonfound) {
-            likevideo()
-        }
-    }, 180000);
+function LikeVideo() {
+    // check if already liked
+    if (ContainsUser() && btn.getAttribute("aria-pressed") === "false") {
+        btn.click();
+    } 
 }
 
 
+// once loaded get the info
 chrome.storage.sync.get({ "likeuservideos": [] }, function (result) {
+    // get the list
     likeusers = result;
-	
-    //console.log("Like users", likeusers.likeuservideos);
-    likevideo();
+
+    // load info
+    LoadPageInfo();
 });
+
+
+function LoadPageInfo() {
+    var primary = document.querySelector("#primary");
+                         //document.querySelector("#primary").querySelector("#channel-name").getElementsByTagName("a")[0].innerText
+    if (!IsEmpty(primary)) {
+        currentYoutuber = primary.querySelector("#channel-name").getElementsByTagName("a")[0].innerText;
+        btn = primary.querySelector("#top-level-buttons").getElementsByTagName("button")[0];
+
+        console.log(currentYoutuber);
+        console.log(btn);
+
+        if (!IsEmpty(currentYoutuber) & !IsEmpty(btn)) {
+            setTimeout(function () {
+                LikeVideo();
+            }, 60000);
+        }
+    } 
+}
+
+function RetryPageload() {
+    setTimeout(function () {
+        LoadPageInfo();
+    }, 2000);
+}
+
 
 // Listen to button calls
 chrome.runtime.onMessage.addListener(function (request, sender) {
     switch (request.handling) {
         case "test":
-            //console.log("test recieved");
+            console.log("test recieved");
             break;
         case "active":
             ContainsUser();
@@ -54,13 +65,21 @@ chrome.runtime.onMessage.addListener(function (request, sender) {
 });
 
 function ContainsUser() {
-    var youtuber = document.getElementById("channel-name").firstElementChild.firstElementChild.firstElementChild.firstElementChild.innerHTML;
+    if (!IsEmpty(currentYoutuber)) {
+        chrome.storage.local.set({ "currentuser": currentYoutuber }, function () {
+            console.log('Currentuser is set to ' + currentYoutuber);
+        });
 
-    chrome.storage.sync.set({ "currentuser": youtuber }, function () {
-        //console.log('Currentuser is set to ' + youtuber);
-    });
+        return likeusers.likeuservideos.indexOf(currentYoutuber) !== -1;
+    } else {
+        LoadPageInfo();
 
-    return likeusers.likeuservideos.indexOf(youtuber) !== -1;
+        setTimeout(function () {
+            ContainsUser();    
+        }, 100);
+	}
+    
+
 }
 
 function AddUser() {
@@ -72,9 +91,10 @@ function AddUser() {
         if (!ContainsUser()) {
             likeusers.likeuservideos.push(youtuber);
             SavaData();
+            btn.click();
             likevideo();
 
-            //console.log("Added Users: ", likeusers.likeuservideos);
+            console.log("Added Users: ", likeusers.likeuservideos);
         }
     });
 }
@@ -89,14 +109,14 @@ function RemoveUser() {
             likeusers.likeuservideos.remove(youtuber);
             SavaData();
 
-            //console.log("Removed Users: ", likeusers.likeuservideos);
+            console.log("Removed Users: ", likeusers.likeuservideos);
         }
     });
 }
 
 function SavaData() {
     chrome.storage.sync.set({ "likeuservideos": likeusers.likeuservideos }, function () {
-        //console.log('likeuservideos is set to ' + likeusers.likeuservideos);
+        console.log('likeuservideos is set to ' + likeusers.likeuservideos);
     });
 }
 
@@ -110,3 +130,11 @@ Array.prototype.remove = function () {
     }
     return this;
 };
+
+function IsEmpty(dim) {
+    if (dim === "" || dim === null || dim === undefined || dim === false || dim.length === 0 || dim.length === 000) {
+        return true;
+    }
+
+    return false;
+}
